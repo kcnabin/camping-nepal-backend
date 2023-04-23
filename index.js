@@ -1,20 +1,34 @@
+require('dotenv').config()
 const express = require('express')
 const app = express()
-const jwt = require('jsonwebtoken')
-const PORT = 4000
-const SECRET_KEY = 'SUPER_SECRET_KEY'
-const {getTokenFromRequest} = require('./helper/getTokenFromRequest')
+const cors = require('cors')
+const signup = require('./routes/signup')
+const getTokenFromRequest = require('./helper/getTokenFromRequest').getTokenFromRequest
+const mongoose = require('mongoose')
 
+const PORT = process.env.PORT
+const MONGO_URL = process.env.MONGO_URL
+
+app.use(cors())
 app.use(express.json())
-app.use((req, res, next) => {
-  console.log(req.headers)
-  next()
-})
 
-const loggerMiddleware = (req, res, next) => {
+try {
+  const connectToDB = async () => {
+    await mongoose.connect(MONGO_URL)
+    console.log('--Connected to DB--')
+  }
+  connectToDB()
+
+} catch (e) {
+  console.log('--Error connecting to DB--')
+}
+
+const logger = (req, res, next) => {
   console.log(`${req.method} request to path ${req.path}`)
   next()
 }
+
+app.use(logger)
 
 const decodeToken = async (req, res, next) => {
   const token = getTokenFromRequest(req)
@@ -38,27 +52,8 @@ const decodeToken = async (req, res, next) => {
   }
 }
 
+app.use('/signup', signup)
 
-app.post('/place', decodeToken, (req, res) => {
-  
-  console.log('I passed through middleware :', req.decodedToken );
-  res.json({
-    msg: 'post req to /place'
-  })
-})
-
-app.post('/nabin', decodeToken, (req, res) => {
-  console.log(req.decodedToken)
-  res.send('I am in nabin endpoint')
-})
-
-app.get('/', loggerMiddleware, (req, res) => {
-  res.send('homepage')
-})
-
-app.get('/no-log', (req, res) => {
-  res.send('no logging in this route')
-})
 
 app.listen(PORT, () => {
   console.log(`Server running at port ${PORT}`);
