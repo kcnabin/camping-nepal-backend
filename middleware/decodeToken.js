@@ -19,3 +19,5 @@ const decodeToken = async (req, res, next) => {
     return
   }
 }
+
+module.exports = decodeToken

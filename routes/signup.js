@@ -2,8 +2,19 @@ const signup = require('express').Router()
 const bcrypt = require('bcrypt')
 const User = require('../model/User')
 
-signup.post('/', async (req, res) => {
+signup.post('/', async (req, res, next) => {
   const {fullName, email, password} = req.body
+
+  try {
+    const user = await User.findOne({email})
+    
+    if (user) {
+      next(new Error('User already in database'))
+    }
+
+  } catch (e) {
+    next(new Error('Can not connect to database'))
+  }
 
   const saltRounds = 10
   const passwordHash = await bcrypt.hash(password, saltRounds)
@@ -17,15 +28,15 @@ signup.post('/', async (req, res) => {
   try {
     const newUser = new User(userObject)
     await newUser.save()
-    res.status(202).end()
+    console.log('new user created')
+
+    res.status(202).json({
+      msg: 'new user created'
+    })
 
   } catch (e) {
-    console.log(e.message);
-    res.status(400).json({
-      err: 'error creating user'
-    })
+    return next(new Error('Error creating user'))
   }
-
   
 })
 
