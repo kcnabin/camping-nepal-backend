@@ -1,3 +1,7 @@
+const { getTokenFromRequest } = require("../helper/getTokenFromRequest")
+const SECRET_KEY = process.env.SECRET_KEY
+const jwt = require('jsonwebtoken')
+
 const decodeToken = async (req, res, next) => {
   const token = getTokenFromRequest(req)
 
