@@ -4,8 +4,10 @@
   "description": "express backend for MERN app camping nepal",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon index"
+    "server": "nodemon index",
+    "dev": "npm run start-mongo-server && npm run server",
+    "start-mongo-server": "sudo systemctl start mongod",
+    "stop-mongo-server": "sudo systemctl stop mongod"
   },
   "author": "Nabin KC",
   "license": "ISC",
@@ -14,6 +16,7 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "image-downloader": "^4.3.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.4"
   },

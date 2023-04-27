@@ -10,6 +10,7 @@ const errorHandler = require('./middleware/errorHandler')
 const unknownEndpoint = require('./middleware/unknownEndpoint')
 const login = require('./routes/login')
 const places = require('./routes/places')
+const uploadPhoto = require('./routes/uploadPhotoByLink')
 
 const PORT = process.env.PORT
 const MONGO_URL = process.env.MONGO_URL
@@ -31,6 +32,7 @@ app.use(logger)
 app.use('/signup', signup)
 app.use('/login', login)
 app.use('/places', places)
+app.use('/uploadPhoto', uploadPhoto)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
