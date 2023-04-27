@@ -17,7 +17,7 @@ uploadPhoto.post('/', async (req, res, next) => {
     const imageResponse = await downloadImage.image(options)
     
     res.json({
-      filename: imageResponse.filename
+      filename: newName
     })
   
   } catch (e) {
