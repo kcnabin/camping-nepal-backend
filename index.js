@@ -13,6 +13,7 @@ const places = require('./routes/places')
 const uploadPhoto = require('./routes/uploadPhotoByLink')
 const booking = require('./routes/booking')
 const userBooking = require('./routes/userBooking')
+const uploadFromDevice = require('./routes/uploadFromDevice')
 
 const PORT = process.env.PORT
 const MONGO_URL = process.env.MONGO_URL
@@ -31,10 +32,12 @@ try {
 app.use(cors())
 app.use(express.json())
 app.use(logger)
+app.use('/uploads', express.static(__dirname + '/uploads'))
 app.use('/signup', signup)
 app.use('/login', login)
 app.use('/places', places)
 app.use('/uploadPhoto', uploadPhoto)
+app.use('/upload-from-device', uploadFromDevice)
 app.use('/booking', booking)
 app.use('/user-booking', userBooking)
 
