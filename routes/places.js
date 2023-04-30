@@ -36,15 +36,33 @@ places.get('/', decodeToken, async (req, res, next) => {
   }
 })
 
-places.get('/all', async (req, res) => {
+places.get('/all', decodeToken, async (req, res) => {
+  const {id} = req.decodedToken
   try {
     const allPlaces = await Place.find({})
+    const otherPlaces = allPlaces.filter(place => place.owner.toString() !== id.toString())
     
-    res.json(allPlaces)
+    res.json(otherPlaces)
+    // res.json(allPlaces)
 
   } catch (e) {
     console.log(e)
     return next(new Error('Unable to fetch ALL places'))
+
+  }
+})
+
+places.get('/:id', async (req, res, next) => {
+  const placeId = req.params.id
+
+  try {
+    const onePlace = await Place.findById(placeId)
+    
+    res.json(onePlace)
+
+  } catch (e) {
+    console.log(e)
+    return next(new Error('Unable to fetch one place'))
 
   }
 })

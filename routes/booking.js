@@ -27,6 +27,7 @@ booking.get('/', decodeToken, async (req, res, next) => {
   try {
     const myBooking = await Booking.find({bookingBy: decodedToken.id})
     res.json(myBooking)
+    
   } catch (e) {
     return next(new Error('Unable to fetch booking'))
   }
