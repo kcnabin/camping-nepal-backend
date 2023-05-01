@@ -8,7 +8,8 @@ const BookingSchema = new mongoose.Schema({
   checkIn: Date,
   checkOut: Date,
   contactName: String,
-  contactNo: Number
+  contactNo: Number,
+  price: Number
 
 })
 

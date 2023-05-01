@@ -6,7 +6,7 @@ const PlaceSchema = new mongoose.Schema({
   photos: {type: Array},
   descriptions: {type: String},
   facilities: {type: Array},
-  guestNum: {type: Number},
+  guestsNum: {type: Number},
   price: {type: Number, required: true},
   owner: {type: mongoose.Schema.Types.ObjectId, ref: 'User'}
 })

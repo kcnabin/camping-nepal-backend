@@ -67,4 +67,46 @@ places.get('/:id', async (req, res, next) => {
   }
 })
 
+places.put('/:id', decodeToken, async (req, res, next) => {
+  const placeId = req.params.id
+  const placeToUpdate = req.body
+  const { decodedToken } = req
+
+  if (decodedToken.id.toString() !== placeToUpdate.owner.toString()) {
+    return next(new Error('Not authorized to update'))
+  }
+
+  try {
+    const updatedPlace = await Place.findByIdAndUpdate(placeId, placeToUpdate)
+    console.log('Place updated')
+    res.json(updatedPlace)
+
+  } catch (e) {
+    console.log(e)
+    return next(new Error('Error updating place'))
+  }
+  
+})
+
+places.delete('/:id', decodeToken, async (req, res, next) => {
+  const placeId = req.params.id
+  const placeToUpdate = await Place.findById(placeId)
+  const { decodedToken } = req
+
+  if (decodedToken.id.toString() !== placeToUpdate.owner.toString()) {
+    return next(new Error('Not authorized to delete'))
+  }
+
+  try {
+    await Place.findByIdAndDelete(placeId)
+    console.log('Place deleted!')
+    res.end()
+
+  } catch (e) {
+    console.log(e)
+    return next(new Error('Error deleting place'))
+  }
+  
+})
+
 module.exports = places
