@@ -17,6 +17,7 @@ places.post('/', decodeToken, async (req, res, next) => {
 
   } catch (e) {
     console.log(e)
+    console.log(e.name)
     return next(new Error('Error saving new place'))
   }
 })
@@ -36,7 +37,7 @@ places.get('/', decodeToken, async (req, res, next) => {
   }
 })
 
-places.get('/all', decodeToken, async (req, res) => {
+places.get('/all', decodeToken, async (req, res, next) => {
   const {id} = req.decodedToken
   try {
     const allPlaces = await Place.find({})

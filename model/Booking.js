@@ -5,13 +5,13 @@ const BookingSchema = new mongoose.Schema({
   bookingConfirm: Boolean,
   bookedPlace: String,
   placeOwner: String,
-  checkIn: Date,
-  checkOut: Date,
+  checkIn: String,
+  checkOut: String,
   contactName: String,
   contactNo: Number,
   price: Number,
-  placeName: String
-
+  placeName: String,
+  noOfPeople: Number
 })
 
 const Booking = mongoose.model('Booking', BookingSchema)

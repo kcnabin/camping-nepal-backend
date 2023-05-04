@@ -32,7 +32,7 @@ login.post('/', async (req, res, next) => {
     })
 
   } catch (e) {
-    return next(new Error(`can't connect to database`))
+    return next(new Error(`Can't connect to database`))
   }
 
 })

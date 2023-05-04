@@ -33,12 +33,66 @@ booking.get('/', decodeToken, async (req, res, next) => {
   }
 })
 
+booking.get('/:id', decodeToken, async (req, res, next) => {
+  const bookingId = req.params.id
+
+  try {
+    const bookedPlace = await Booking.findById(bookingId)
+
+    if (!bookedPlace) {
+      return next(new Error('Booking not found'))
+    }
+
+    if (bookedPlace.bookingBy.toString() !== req.decodedToken.id.toString()) {
+      return next(new Error('Not authorized'))
+    }
+
+    res.json(bookedPlace)
+  
+  } catch (e) {
+    return next(new Error('Unable to fetch booking') )
+  }
+  
+})
+
+booking.put('/:id', decodeToken, async (req, res, next) => {
+  const bookingId = req.params.id
+  const bookingToUpdate = req.body
+
+  try {
+    const booking = await Booking.findById(bookingId)
+
+    if (!booking) {
+      return next(new Error('Booking not found'))
+    }
+
+    if (bookingToUpdate.bookingBy.toString() !== req.decodedToken.id.toString()) {
+      return next(new Error('Not authorized'))
+    }
+
+    await Booking.findByIdAndUpdate(bookingId, bookingToUpdate)
+    res.end()
+
+  } catch (e) {
+    console.log(e)
+    return next(new Error('Unable to update booking!'))
+  }
+
+  res.end()
+
+})
+
 booking.delete('/:id', decodeToken, async (req, res, next) => {
   const {decodedToken} = req
   const bookingId = req.params.id
 
   try {
     const bookingToDelete = await Booking.findById(bookingId)
+
+    if (!bookingToDelete) {
+      return next(new Error('Booking not found'))
+    }
+
     if (bookingToDelete.bookingBy.toString() !== decodedToken.id.toString()) {
       return next(new Error('Not authorized'))
 
