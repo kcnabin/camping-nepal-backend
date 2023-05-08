@@ -28,14 +28,13 @@ signup.post('/', async (req, res, next) => {
   try {
     const newUser = new User(userObject)
     await newUser.save()
-    console.log('new user created')
 
     res.status(202).json({
       msg: 'new user created'
     })
 
   } catch (e) {
-    return next(new Error('Error creating user'))
+    return next(e)
   }
   
 })

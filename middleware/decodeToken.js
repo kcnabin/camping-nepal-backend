@@ -6,10 +6,7 @@ const decodeToken = async (req, res, next) => {
   const token = getTokenFromRequest(req)
 
   if (!token) {
-    res.json({
-      err: 'token not found'
-    })
-    return
+    return next(new Error('token not found'))
   }
 
   try {
@@ -18,9 +15,7 @@ const decodeToken = async (req, res, next) => {
     next()  
 
   } catch (e) {
-    console.log(e.name)
-    res.send(e.name)
-    return
+    return next(e)
   }
 }
 

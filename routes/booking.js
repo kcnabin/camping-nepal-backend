@@ -17,7 +17,7 @@ booking.post('/', decodeToken, async (req, res, next) => {
     res.json(savedBooking)
 
   } catch (e) {
-    return next(new Error('Unable to book place'))
+    return next(e)
   }
 })
 
@@ -50,7 +50,7 @@ booking.get('/:id', decodeToken, async (req, res, next) => {
     res.json(bookedPlace)
   
   } catch (e) {
-    return next(new Error('Unable to fetch booking') )
+    return next(e)
   }
   
 })
@@ -74,11 +74,8 @@ booking.put('/:id', decodeToken, async (req, res, next) => {
     res.end()
 
   } catch (e) {
-    console.log(e)
-    return next(new Error('Unable to update booking!'))
+    return next(e)
   }
-
-  res.end()
 
 })
 
@@ -98,12 +95,11 @@ booking.delete('/:id', decodeToken, async (req, res, next) => {
 
     } else {
         await Booking.findByIdAndDelete(bookingId)
-        console.log('booking deleted')
         res.end()
     }
 
   } catch (e) {
-      return next(new Error('Unable to delete booking'))
+      return next(e)
   }
 })
 

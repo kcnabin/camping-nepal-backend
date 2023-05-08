@@ -21,7 +21,7 @@ login.post('/', async (req, res, next) => {
     const token = await jwt.sign(
       {id: user._id.toString(), name: user.fullName},
       process.env.SECRET_KEY,
-      {expiresIn: 360000}
+      {expiresIn: 3600}
     )
 
     console.log(`user '${user.fullName}' logged in`)

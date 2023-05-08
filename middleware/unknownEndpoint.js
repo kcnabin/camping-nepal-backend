@@ -1,9 +1,5 @@
-const unknownEndpoint = (req, res) => {
-  console.log('unknown endpoint')
-  
-  res.status(400).json({
-    err: 'unknown endpoint'
-  })
+const unknownEndpoint = (req, res, next) => {
+  return next (new Error('Unknown Endpoint'))
 }
 
 module.exports = unknownEndpoint

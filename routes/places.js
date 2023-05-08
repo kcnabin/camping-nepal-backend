@@ -1,4 +1,5 @@
 const decodeToken = require('../middleware/decodeToken')
+const doesPlaceExist = require('../middleware/doesPlaceExist')
 const Place = require('../model/Place')
 const places = require('express').Router()
 
@@ -16,9 +17,7 @@ places.post('/', decodeToken, async (req, res, next) => {
     res.status(202).json(savedPlace)
 
   } catch (e) {
-    console.log(e)
-    console.log(e.name)
-    return next(new Error('Error saving new place'))
+    return next(e)
   }
 })
 
@@ -31,9 +30,7 @@ places.get('/', decodeToken, async (req, res, next) => {
     res.json(myPlaces)
 
   } catch (e) {
-    console.log(e)
-    return next(new Error('Unable to fetch user places'))
-
+    return next(e)
   }
 })
 
@@ -44,28 +41,20 @@ places.get('/all', decodeToken, async (req, res, next) => {
     const otherPlaces = allPlaces.filter(place => place.owner.toString() !== id.toString())
     
     res.json(otherPlaces)
-    // res.json(allPlaces)
 
   } catch (e) {
-    console.log(e)
-    return next(new Error('Unable to fetch ALL places'))
+    return next(e)
 
   }
 })
 
-places.get('/:id', async (req, res, next) => {
+places.get('/:id', decodeToken, doesPlaceExist, async (req, res, next) => {
   const placeId = req.params.id
 
-  try {
-    const onePlace = await Place.findById(placeId)
-    
-    res.json(onePlace)
+  const onePlace = await Place.findById(placeId)
+  
+  res.json(onePlace)
 
-  } catch (e) {
-    console.log(e)
-    return next(new Error('Unable to fetch one place'))
-
-  }
 })
 
 places.put('/:id', decodeToken, async (req, res, next) => {
@@ -79,12 +68,10 @@ places.put('/:id', decodeToken, async (req, res, next) => {
 
   try {
     const updatedPlace = await Place.findByIdAndUpdate(placeId, placeToUpdate)
-    console.log('Place updated')
     res.json(updatedPlace)
 
   } catch (e) {
-    console.log(e)
-    return next(new Error('Error updating place'))
+    return next(e)
   }
   
 })
@@ -100,12 +87,10 @@ places.delete('/:id', decodeToken, async (req, res, next) => {
 
   try {
     await Place.findByIdAndDelete(placeId)
-    console.log('Place deleted!')
     res.end()
 
   } catch (e) {
-    console.log(e)
-    return next(new Error('Error deleting place'))
+    return next(e)
   }
   
 })

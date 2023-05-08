@@ -21,7 +21,6 @@ uploadPhoto.post('/', async (req, res, next) => {
     })
   
   } catch (e) {
-    console.log(e)
     return next(new Error('can not download image'))
   }
 })

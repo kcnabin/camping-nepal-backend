@@ -19,7 +19,6 @@ userBooking.put('/confirm/:id', decodeToken, async (req, res, next) => {
   const {decodedToken} = req
   const bookingId = req.params.id
 
-
   try {
     const bookingToConfirm = await Booking.findById(bookingId)
 
@@ -29,13 +28,12 @@ userBooking.put('/confirm/:id', decodeToken, async (req, res, next) => {
     } else {
       await Booking.findByIdAndUpdate(bookingId, req.body)
       const confirmedBooking = await Booking.findById(bookingId)
-      console.log('Booking Confirmed!');
       res.json(confirmedBooking)
       
       
     }
   } catch (e) {
-    return next(new Error('Unable to confirm booking'))
+    return next(e)
   }
 })
 

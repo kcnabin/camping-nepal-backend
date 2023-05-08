@@ -18,18 +18,19 @@ const uploadFromDevice = require('./routes/uploadFromDevice')
 const PORT = process.env.PORT
 const MONGO_URL = process.env.MONGO_URL
 
-try {
-  const connectToDB = async () => {
+const connectToDB = async () => {
+  try {
     await mongoose.connect(MONGO_URL)
     console.log('--Connected to DB--')
+
+  } catch (e) {
+    console.log('--Error connecting to DB--')
+    return
   }
-  connectToDB()
-
-} catch (e) {
-  console.log('--Error connecting to DB--')
 }
+connectToDB()
 
-app.use(cors())
+app.use(cors()) 
 app.use(express.json())
 app.use(logger)
 app.use('/uploads', express.static(__dirname + '/uploads'))
@@ -43,6 +44,7 @@ app.use('/user-booking', userBooking)
 
 app.use(unknownEndpoint)
 app.use(errorHandler)
+ 
 
 app.listen(PORT, () => {
   console.log(`Server running at port ${PORT}`);

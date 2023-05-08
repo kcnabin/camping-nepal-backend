@@ -21,12 +21,10 @@ uploadFromDevice.post('/', photosMiddlware.array('photos', 10), async (req, res,
       fs.renameSync(path, newPath)
       uploadedPhotos.push(newName)
     }
-    console.log('Files uploaded from device ')
     res.json(uploadedPhotos)
 
   } catch (e) {
-    console.log(e)
-    return next(new Error(`Error uploading from device`))
+    return next(e)
   }
 } )
 
