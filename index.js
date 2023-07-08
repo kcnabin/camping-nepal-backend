@@ -16,6 +16,7 @@ const userBooking = require("./routes/userBooking");
 const uploadFromDevice = require("./routes/uploadFromDevice");
 const userInfo = require("./routes/userInfo");
 const changePassword = require("./routes/changePassword");
+const search = require("./routes/search");
 
 const PORT = process.env.PORT;
 const MONGO_URL = process.env.MONGO_URL;
@@ -43,6 +44,7 @@ app.use("/upload-from-device", uploadFromDevice);
 app.use("/booking", booking);
 app.use("/user-booking", userBooking);
 app.use("/change-password", changePassword);
+app.use("/search", search);
 
 app.use("/user-info", userInfo);
 
