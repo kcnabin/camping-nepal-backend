@@ -1,106 +1,102 @@
-const decodeToken = require('../middleware/decodeToken')
-const Booking = require('../model/Booking')
+const decodeToken = require("../middleware/decodeToken");
+const Booking = require("../model/Booking");
 
-const booking = require('express').Router()
+const booking = require("express").Router();
 
-booking.post('/', decodeToken, async (req, res, next) => {
-  const bookingObject = req.body
-  const {decodedToken} = req
+booking.post("/", decodeToken, async (req, res, next) => {
+  const bookingObject = req.body;
+  const { decodedToken } = req;
 
   try {
     const placeToBeBooked = new Booking({
       ...bookingObject,
       bookingBy: decodedToken.id,
-      bookingConfirm: false
-    })
-    const savedBooking = await placeToBeBooked.save()
-    res.json(savedBooking)
-
+      bookingConfirm: false,
+    });
+    const savedBooking = await placeToBeBooked.save();
+    res.json(savedBooking);
   } catch (e) {
-    return next(e)
+    return next(e);
   }
-})
+});
 
-booking.get('/', decodeToken, async (req, res, next) => {
-  const {decodedToken} = req
+booking.get("/", decodeToken, async (req, res, next) => {
+  const { decodedToken } = req;
 
   try {
-    const myBooking = await Booking.find({bookingBy: decodedToken.id})
-    res.json(myBooking)
-    
+    const myBooking = await Booking.find({
+      bookingBy: decodedToken.id,
+    }).populate("bookedPlace");
+    res.json(myBooking);
   } catch (e) {
-    return next(new Error('Unable to fetch booking'))
+    return next(new Error("Unable to fetch booking"));
   }
-})
+});
 
-booking.get('/:id', decodeToken, async (req, res, next) => {
-  const bookingId = req.params.id
+booking.get("/:id", decodeToken, async (req, res, next) => {
+  const bookingId = req.params.id;
 
   try {
-    const bookedPlace = await Booking.findById(bookingId)
+    const bookedPlace = await Booking.findById(bookingId);
 
     if (!bookedPlace) {
-      return next(new Error('Booking not found'))
+      return next(new Error("Booking not found"));
     }
 
     if (bookedPlace.bookingBy.toString() !== req.decodedToken.id.toString()) {
-      return next(new Error('Not authorized'))
+      return next(new Error("Not authorized"));
     }
 
-    res.json(bookedPlace)
-  
+    res.json(bookedPlace);
   } catch (e) {
-    return next(e)
+    return next(e);
   }
-  
-})
+});
 
-booking.put('/:id', decodeToken, async (req, res, next) => {
-  const bookingId = req.params.id
-  const bookingToUpdate = req.body
+booking.put("/:id", decodeToken, async (req, res, next) => {
+  const bookingId = req.params.id;
+  const bookingToUpdate = req.body;
 
   try {
-    const booking = await Booking.findById(bookingId)
+    const booking = await Booking.findById(bookingId);
 
     if (!booking) {
-      return next(new Error('Booking not found'))
+      return next(new Error("Booking not found"));
     }
 
-    if (bookingToUpdate.bookingBy.toString() !== req.decodedToken.id.toString()) {
-      return next(new Error('Not authorized'))
+    if (
+      bookingToUpdate.bookingBy.toString() !== req.decodedToken.id.toString()
+    ) {
+      return next(new Error("Not authorized"));
     }
 
-    await Booking.findByIdAndUpdate(bookingId, bookingToUpdate)
-    res.end()
-
+    await Booking.findByIdAndUpdate(bookingId, bookingToUpdate);
+    res.end();
   } catch (e) {
-    return next(e)
+    return next(e);
   }
+});
 
-})
-
-booking.delete('/:id', decodeToken, async (req, res, next) => {
-  const {decodedToken} = req
-  const bookingId = req.params.id
+booking.delete("/:id", decodeToken, async (req, res, next) => {
+  const { decodedToken } = req;
+  const bookingId = req.params.id;
 
   try {
-    const bookingToDelete = await Booking.findById(bookingId)
+    const bookingToDelete = await Booking.findById(bookingId);
 
     if (!bookingToDelete) {
-      return next(new Error('Booking not found'))
+      return next(new Error("Booking not found"));
     }
 
     if (bookingToDelete.bookingBy.toString() !== decodedToken.id.toString()) {
-      return next(new Error('Not authorized'))
-
+      return next(new Error("Not authorized"));
     } else {
-        await Booking.findByIdAndDelete(bookingId)
-        res.end()
+      await Booking.findByIdAndDelete(bookingId);
+      res.end();
     }
-
   } catch (e) {
-      return next(e)
+    return next(e);
   }
-})
+});
 
-module.exports = booking
+module.exports = booking;

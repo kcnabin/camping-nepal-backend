@@ -1,19 +1,27 @@
-const mongoose = require('mongoose')
+const mongoose = require("mongoose");
 
 const BookingSchema = new mongoose.Schema({
-  bookingBy: String,
+  bookingBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   bookingConfirm: Boolean,
-  bookedPlace: String,
-  placeOwner: String,
+  bookedPlace: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Place",
+  },
+  placeName: String,
+  placeOwner: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+  },
   checkIn: String,
   checkOut: String,
   contactName: String,
-  contactNo: Number,
+  contactNo: String,
+  email: String,
   price: Number,
-  placeName: String,
-  noOfPeople: Number
-})
+  noOfPeople: Number,
+});
 
-const Booking = mongoose.model('Booking', BookingSchema)
-
-module.exports = Booking
+module.exports = mongoose.model("Booking", BookingSchema);

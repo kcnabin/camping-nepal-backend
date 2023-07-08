@@ -1,19 +1,20 @@
-const Place = require("../model/Place")
+const Place = require("../model/Place");
 
 const doesPlaceExist = async (req, res, next) => {
-  const placeId = req.params.id
+  const placeId = req.params.id;
 
   try {
-    const fetchedPlace = await Place.findById(placeId)
+    const place = await Place.findById(placeId);
 
-    if (!fetchedPlace) {
-      return next(new Error('Place doesnot exist!'))
-    } 
-    next()
-  
+    if (!place) {
+      return next(new Error("Place doesnot exist!"));
+    }
+    req.place = place;
+
+    next();
   } catch (e) {
-    return next(e)
+    return next(e);
   }
-}
+};
 
-module.exports = doesPlaceExist
+module.exports = doesPlaceExist;
